@@ -26,9 +26,4 @@ setup(
     packages=["volumio-websocket"],
     include_package_data=True,
     install_requires=["python-socketio[asyncio_client]"],
-    entry_points={
-        "console_scripts": [
-            "websocket=volumio-websocket.__main__:main",
-        ]
-    },
 )
