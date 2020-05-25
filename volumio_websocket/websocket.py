@@ -1,5 +1,8 @@
 
 import socketio
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 # taken from https://github.com/volumio/Volumio2/blob/master/app/plugins/user_interface/websocket/index.js
 _methods = {
@@ -77,11 +80,13 @@ class Websocket:
         name = self.get_answer_name(method)
 
         if name is not None:
+            _LOGGER.debug("listen for event {}".format(name))
             @self._sio.on(name)
             def func(data):
                 nonlocal name, self
                 setattr(self, name, data)
 
+        _LOGGER.debug("Emit event {} with params {}".format(method, params))
         await self._sio.emit(method, params)
 
         if name is None:
@@ -92,7 +97,7 @@ class Websocket:
 
         data = self.get(name)
         while counter < wait and data is None:
-            self._sio.sleep(sleeptimer)
+            await self._sio.sleep(sleeptimer)
             counter += sleeptimer
             data = self.get(name)
 
