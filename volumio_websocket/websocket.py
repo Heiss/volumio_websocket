@@ -89,6 +89,7 @@ class Websocket:
 
         _LOGGER.debug("Emit event {} with params {}".format(method, params))
         await self._sio.emit(method, params)
+        await self._sio.sleep(0.1)
 
         if name is None:
             return None
