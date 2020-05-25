@@ -41,9 +41,7 @@ async def request(host, port, method, params=None, path=None):
 
     socket = Websocket(host, port, path=path)
     await socket.connect()
-
     data = await socket.call(method, params)
-
     await socket.disconnect()
 
     return data

@@ -94,14 +94,16 @@ class Websocket:
         Returns None, if no result was present in the meanwhile.
         """
 
-        name = await self.emit(method, params)
-        if name is None:
-            return None
+        name = self.get_answer_name(method)
 
         @self._sio.on(name)
         def func(data):
             nonlocal name, self
             setattr(self, name, data)
+
+        await self.emit(method, params)
+        if name is None:
+            return None
 
         counter = 0
         sleeptimer = 0.1
@@ -112,7 +114,7 @@ class Websocket:
             counter += sleeptimer
             data = self.get(name)
 
-        return self.get(name)
+        return data
 
     async def disconnect(self):
         await self._sio.disconnect()
