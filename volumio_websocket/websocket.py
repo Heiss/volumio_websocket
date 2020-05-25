@@ -76,6 +76,7 @@ class Websocket:
             state_name = None
 
         await self._sio.emit(method, params)
+        await self._sio.sleep(0.1)
 
         return state_name
 
@@ -102,7 +103,7 @@ class Websocket:
 
         name = await self.emit(method, params)
         if name is None:
-            return
+            return None
 
         counter = 0
         sleeptimer = 0.1
