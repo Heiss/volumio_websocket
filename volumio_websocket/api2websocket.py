@@ -33,7 +33,7 @@ def patch_api(f):
     return wrapper
 
 
-patch_api(Websocket.emit)
+patch_api(Websocket.call)
 
 
 async def request(host, port, method, params=None, path=None):
