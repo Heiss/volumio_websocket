@@ -43,6 +43,7 @@ class Websocket:
         self.port = port
         self.path = path
         self.is_connected = False
+        self._sio = None
 
     async def connect(self):
         url = f"http://{self.host}:{self.port}"
@@ -56,33 +57,12 @@ class Websocket:
         await self._sio.connect(url)
         self.is_connected = True
 
-    async def emit(self, method, params=None):
-        """
-        Emit a method with params.
-
-        Returns a  *name* in this object,
-        where you can find your results.
-        Use obj.get(*name*) to get the results.
-        """
-        if method in _methods:
-            state_name = self.get_answer_name(method)
-        else:
-            state_name = None
-
-        await self._sio.emit(method, params)
-
-        return state_name
-
     def get(self, name):
         return getattr(self, name, None)
 
     @classmethod
     def get_answer_name(cls, method):
-        return _methods[method]
-
-    async def command(self, command):
-        """Emit a call without any params."""
-        await self.emit(command)
+        return _methods.get(method, None)
 
     async def call(self, method, params=None, wait=2):
         """
@@ -96,12 +76,14 @@ class Websocket:
 
         name = self.get_answer_name(method)
 
-        @self._sio.on(name)
-        def func(data):
-            nonlocal name, self
-            setattr(self, name, data)
+        if name is not None:
+            @self._sio.on(name)
+            def func(data):
+                nonlocal name, self
+                setattr(self, name, data)
 
-        await self.emit(method, params)
+        await self._sio.emit(method, params)
+
         if name is None:
             return None
 
