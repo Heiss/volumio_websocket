@@ -9,12 +9,12 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="Volumio-Websocket",
+    name="volumio-websocket",
     version="1.0.0",
     description="Communicate with a volumio instance via websocket.",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/heiss/volumio_websocket",
+    url="https://github.com/Heiss/volumio_websocket",
     author="Peter Heiss",
     author_email="peter.heiss@uni-muenster.de",
     license="MIT",
