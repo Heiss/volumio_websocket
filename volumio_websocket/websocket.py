@@ -101,6 +101,9 @@ class Websocket:
         """
 
         name = await self.emit(method, params)
+        if name is None:
+            return
+
         counter = 0
         sleeptimer = 0.1
 
