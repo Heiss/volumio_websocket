@@ -5,7 +5,7 @@ from functools import wraps
 from asyncio import sleep
 
 
-def api2websocket(method, params, **kwargs):
+def api2websocket(method, params):
     """Transform method and params from api to websocket calls."""
     if method == "commands":
         method = params["cmd"]
@@ -22,22 +22,13 @@ def api2websocket(method, params, **kwargs):
     if method == params:
         params = None
 
-    return method, params, kwargs
-
-
-def patch_api(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        return f(api2websocket(args, kwargs))
-
-    return wrapper
-
-
-patch_api(Websocket.call)
+    return method, params
 
 
 async def request(host, port, method, params=None, path=None):
     """Handles api methods to make sync websocket requests."""
+
+    method, params = api2websocket(method, params)
 
     ws = Websocket(host, port, path=path)
     await ws.connect()

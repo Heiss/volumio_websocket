@@ -81,6 +81,7 @@ class Websocket:
 
         if name is not None:
             _LOGGER.debug("listen for event {}".format(name))
+
             @self._sio.on(name)
             def func(data):
                 nonlocal name, self
