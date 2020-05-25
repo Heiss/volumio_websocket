@@ -36,24 +36,14 @@ def patch_api(f):
 patch_api(Websocket.emit)
 
 
-def request(host, port, method, params=None, path=None, max=2):
+async def request(host, port, method, params=None, path=None):
     """Handles api methods to make sync websocket requests."""
 
-    state_name = Websocket.get_answer_name(method)
     socket = Websocket(host, port, path)
-    socket.connect()
+    await socket.connect()
 
-    sleeptimer = 0.1
+    data = await socket.call(method, params)
 
-    sleep(sleeptimer)
-    socket.call(method, params)
+    await socket.disconnect()
 
-    counter = 0
-
-    while counter < max and socket.get(state_name) is None:
-        sleep(sleeptimer)
-        counter += sleeptimer
-
-    socket.disconnect()
-
-    return socket.get(state_name)
+    return data
