@@ -23,7 +23,7 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
     ],
-    packages=["volumio-websocket"],
+    packages=["volumio_websocket"],
     include_package_data=True,
     install_requires=["python-socketio[asyncio_client]"],
 )
