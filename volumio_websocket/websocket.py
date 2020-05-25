@@ -1,5 +1,4 @@
 
-import asyncio
 import socketio
 
 # taken from https://github.com/volumio/Volumio2/blob/master/app/plugins/user_interface/websocket/index.js
@@ -67,16 +66,10 @@ class Websocket:
         """
         if method in _methods:
             state_name = self.get_answer_name(method)
-
-            @self._sio.on(state_name)
-            def func(data):
-                nonlocal state_name, self
-                setattr(self, state_name, data)
         else:
             state_name = None
 
         await self._sio.emit(method, params)
-        await self._sio.sleep(0.1)
 
         return state_name
 
@@ -105,12 +98,17 @@ class Websocket:
         if name is None:
             return None
 
+        @self._sio.on(name)
+        def func(data):
+            nonlocal name, self
+            setattr(self, name, data)
+
         counter = 0
         sleeptimer = 0.1
 
         data = self.get(name)
         while counter < wait and data is None:
-            asyncio.sleep(sleeptimer)
+            self._sio.sleep(sleeptimer)
             counter += sleeptimer
             data = self.get(name)
 
