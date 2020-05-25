@@ -1,2 +1,2 @@
-import api2websocket
-import websocket
+from api2websocket import request
+from websocket import Websocket
