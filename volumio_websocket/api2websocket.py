@@ -39,7 +39,7 @@ patch_api(Websocket.emit)
 async def request(host, port, method, params=None, path=None):
     """Handles api methods to make sync websocket requests."""
 
-    socket = Websocket(host, port, path)
+    socket = Websocket(host, port, path=path)
     await socket.connect()
 
     data = await socket.call(method, params)

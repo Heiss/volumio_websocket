@@ -90,7 +90,7 @@ class Websocket:
         """Emit a call without any params."""
         await self.emit(command)
 
-    async def call(self, method, params=None, wait=1):
+    async def call(self, method, params=None, wait=2):
         """
         Emit a method with params and returns the result.
         *wait* specifies, how long you want to wait for a result.
